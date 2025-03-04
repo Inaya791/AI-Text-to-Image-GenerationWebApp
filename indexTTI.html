@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI TTI </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right,rgb(19, 49, 113),rgb(163, 77, 146),rgb(69, 27, 52));
+            text-align: center;
+            color: white;
+            padding: 100px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+        /* NEW: Input wrapper styling */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 80%;
+            margin: auto;
+            background: white;
+            border-radius: 50px; /* Rounded corners */
+            padding: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        /* NEW: Customizing input */
+        input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 16px;
+            background: transparent;
+        }
+        /* NEW: Button inside input */
+        .generate-btn {
+            position: absolute;
+            right: 5px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .images-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .images-container img {
+            width: 200px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+        /* NEW: Loader Animation */
+        .loader {
+            display: none;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #6366f1;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+            margin-top: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* NEW: Time display */
+        #timeTaken {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        /* NEW: Magic Mouse Stars */
+        .star {
+        position: absolute;
+        width: 10px;  /* Increased size to be more visible */
+        height: 10px;
+        background: radial-gradient(circle,rgb(209, 244, 7),rgb(204, 255, 0)); /* Golden star effect */
+        clip-path: polygon(
+            50% 0%, 61% 35%, 98% 35%, 
+            68% 57%, 79% 91%, 50% 70%, 
+            21% 91%, 32% 57%, 2% 35%, 39% 35%
+        ); /* Creates a star shape */
+        pointer-events: none;
+        box-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00;
+        animation: sparkle 0.8s linear forwards;
+        }
+
+        /* Smooth fading out animation */
+        @keyframes sparkle {
+            0% { opacity: 1; transform: scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: scale(1.5) rotate(30deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CREATE MAGIC</h1>
+        <p>Generate beautiful images from text using AI(Flux-schnell)</p>
+
+        <!-- NEW: Input Wrapper with Button Inside -->
+        <div class="input-wrapper">  
+            <input type="text" id="prompt" placeholder="Describe your image...">  
+            <button class="generate-btn" onclick="generateImages()">Create</button> <!-- NEW LINE -->
+        </div>
+
+        <!-- NEW: Loader Animation -->
+        <div id="loader" class="loader"></div>
+        <p id="timeTaken"></p> <!-- NEW LINE -->
+
+        <div class="images-container" id="imageGallery"></div>
+    </div>
+
+    <script>
+        function generateImages() {
+            const prompt = document.getElementById("prompt").value;
+            if (!prompt) {
+                alert("Please enter a prompt!");
+                return;
+            }
+
+            const loader = document.getElementById("loader"); // NEW
+            const timeTakenDisplay = document.getElementById("timeTaken"); // NEW LINE
+            const imageGallery = document.getElementById("imageGallery");
+            imageGallery.innerHTML = ""; // Clear previous images
+            timeTakenDisplay.innerHTML = ""; // Clear previous time display
+            loader.style.display = "block"; // NEW: Show loader
+
+            const startTime = Date.now(); // NEW LINE - Start timing
+
+            fetch("/generate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loader.style.display = "none"; // NEW: Hide loader
+                
+                const endTime = Date.now(); // NEW LINE - Stop timing
+                const timeTaken = ((endTime - startTime) / 1000).toFixed(2); // NEW LINE - Calculate time in seconds
+                
+                if (data.error) {
+                    alert("Error: " + data.error);
+                } else {
+                    timeTakenDisplay.innerHTML = `⏳ Time Taken: ${timeTaken} seconds`; // NEW LINE - Show time taken
+                    data.images.forEach(url => {
+                        const imgElement = document.createElement("img");
+                        imgElement.src = url;
+                        imageGallery.appendChild(imgElement);
+                    });
+                }
+            })
+            .catch(error => {
+                loader.style.display = "none"; // NEW: Hide loader
+                console.error("Error:", error);
+            });
+        }
+        // NEW: Magic Mouse Effect
+        document.addEventListener("mousemove", (e) => {
+            const star = document.createElement("div");
+            star.classList.add("star");
+            document.body.appendChild(star);
+
+            star.style.left = `${e.pageX}px`;
+            star.style.top = `${e.pageY}px`;
+
+            setTimeout(() => {
+                star.remove();
+            }, 800);
+        });
+    </script>
+</body>
+</html>
