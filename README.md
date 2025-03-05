@@ -12,9 +12,17 @@ Generate beautiful images from text using AI(Flux-schnell model) with low latenc
 
 4-Latency (Generation Tiime) : 5-6 sec only (it detect time stamp also )
 
+**Requirements:**
+
+1-Login to DeepInfra AI (Link: https://deepinfra.com/black-forest-labs/FLUX-1-schnell/api)
+
+2-Navigate to settings and copy the API key which is auto generated.
+
+3-Paste the PAI key in AppTTI.py file 
+
 **How to use this Repo?**
 
-1-Clone the Repo
+1-Clone the Repo (Link:https://github.com/Inaya791/AI-Text-to-Image-GenerationWebApp)
 
 2-Put Html file inside template folder [ templates/index.html] to overcome with error 
 
@@ -24,7 +32,7 @@ Generate beautiful images from text using AI(Flux-schnell model) with low latenc
 
 5-Open browser with link given in console
 
-Output image of my code:
+**Output image of my code:**
 
 ![Screenshot 2025-03-04 164623](https://github.com/user-attachments/assets/19d152f3-0ac3-4788-9204-5af5273a1ad3)
 
