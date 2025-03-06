@@ -32,6 +32,14 @@ Generate beautiful images from text using AI(Flux-schnell model) with low latenc
 
 5-Open browser with link given in console
 
+**Suggested Prompts to Apply**
+
+1-A girl holding a coffee mug.
+
+2-A jelly fish in the ocean
+
+3-In a brightly lit laboratory, a futuristic ((engineer)) meticulously designs a solution, surrounded by advanced equipment and tools. Scientific principles are at play as the ((engineer)) carefully constructs and tests the solution, utilizing knowledge of forces, energy, and interactions. The scene exudes innovation and precision, with a focus on problem-solving in engineering
+
 **Output image of my code:**
 
 ![Screenshot 2025-03-04 164623](https://github.com/user-attachments/assets/19d152f3-0ac3-4788-9204-5af5273a1ad3)
